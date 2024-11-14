@@ -27,7 +27,7 @@ public class GridGeneratorEditor : Editor
         }           
         if (GUILayout.Button("Record grid color into SO"))
         {
-            gridGenerator.DEBUG_RecordColor();
+            gridGenerator.DEBUG_UpdateGridDefinition();
 
         }  
         if (GUILayout.Button("Reset Grid"))
@@ -55,14 +55,10 @@ public class GridGeneratorEditor : Editor
         {
             var currentColor = serializedObject.FindProperty("currentColor");
             EditorGUILayout.PropertyField(currentColor);
-            var gridDefinitions = serializedObject.FindProperty("gridDefinitions");
-            EditorGUILayout.PropertyField(gridDefinitions);
-            // var accuracyText = serializedObject.FindProperty("accuracyText");
-            // EditorGUILayout.PropertyField(accuracyText);
-            // var templateImage = serializedObject.FindProperty("templateImage");
-            // EditorGUILayout.PropertyField(templateImage);
-            // var endingTemplateImage = serializedObject.FindProperty("endingTemplateImage");
-            // EditorGUILayout.PropertyField(endingTemplateImage);
+            var defaultGrid = serializedObject.FindProperty("defaultGrid");
+            EditorGUILayout.PropertyField(defaultGrid);
+            var gridDefinitionsToLoad = serializedObject.FindProperty("gridDefinitionsToLoad");
+            EditorGUILayout.PropertyField(gridDefinitionsToLoad);
             var DEBUG_hasGenerate = serializedObject.FindProperty("DEBUG_hasGenerate");
             EditorGUILayout.PropertyField(DEBUG_hasGenerate);
             var DEBUG_canMouseInput = serializedObject.FindProperty("DEBUG_canMouseInput");

@@ -21,7 +21,9 @@ namespace GridSystem
     {
         private Grid grid;
         [SerializeField]
-        private List<GridDefinition> gridDefinitions;
+        private GridDefinition defaultGrid;
+        [SerializeField]
+        private GridDefinition gridDefinitionsToLoad;
         private GridDefinition currentGridDefinition;
         public GridDefinition CurrentGridDefinition => currentGridDefinition;
         [SerializeField]
@@ -40,10 +42,15 @@ namespace GridSystem
         
         void Awake()
         {
-            int random = UnityEngine.Random.Range(0, gridDefinitions.Count);
-            currentGridDefinition = gridDefinitions[random];
-            // if(templateImage != null) { templateImage.sprite = currentGridDefinition.TemplateSprite; }
-            // if(endingTemplateImage != null) { endingTemplateImage.sprite = currentGridDefinition.TemplateSprite; }
+            if(gridDefinitionsToLoad != null)
+            {
+                currentGridDefinition = gridDefinitionsToLoad;
+            }
+            else
+            {
+                currentGridDefinition = defaultGrid;
+            }
+            DEBUG_ResetGrid();
             GenerateGrid();
         }
 
@@ -55,7 +62,10 @@ namespace GridSystem
         public void GenerateGrid()
         {
             //grid = new Grid(gridDefinition, gameObject);
-            grid = new Grid(currentGridDefinition.GridWidth, currentGridDefinition.GridHeight, currentGridDefinition.CellSize, currentGridDefinition.GridSprite, gameObject);
+            if(grid != null)
+            {
+                grid = new Grid(currentGridDefinition.GridWidth, currentGridDefinition.GridHeight, currentGridDefinition.CellSize, currentGridDefinition.GridSprite, gameObject);
+            }
             // int count = 0;
             // for(int x = 0; x < grid.GridArray.GetLength(0); x++)
             // {
@@ -136,21 +146,26 @@ namespace GridSystem
         public void DEBUG_GenerateGrid()
         {
             if(DEBUG_hasGenerate) { DEBUG_ResetGrid(); }
-            grid = new Grid(gridDefinitions[0].GridWidth, gridDefinitions[0].GridHeight, gridDefinitions[0].CellSize, gridDefinitions[0].GridSprite, gameObject);
+            grid = new Grid(defaultGrid.GridWidth, defaultGrid.GridHeight, defaultGrid.CellSize, defaultGrid.GridSprite, gameObject);
             DEBUG_hasGenerate = true;
         }
 
         public void DEBUG_GenerateGridTemplate()
         {
             if(DEBUG_hasGenerate) { DEBUG_ResetGrid(); }
-            grid = new Grid(gridDefinitions[0], gameObject);
-            grid.SetColor(gridDefinitions[0]);
+            if(gridDefinitionsToLoad == null)
+            {
+                Debug.Log("THERE IS NO GRID TO LOAD!");
+                return;
+            }
+            grid = new Grid(gridDefinitionsToLoad, gameObject);
+            grid.SetColor(gridDefinitionsToLoad);
             DEBUG_hasGenerate = true;
         }
 
-        public void DEBUG_RecordColor()
+        public void DEBUG_UpdateGridDefinition()
         {
-            gridDefinitions[0].ResetColorData();
+            gridDefinitionsToLoad.ResetColorData();
             if(grid != null)
             {
                 for(int x = 0; x < grid.GridArray.GetLength(0); x++)
@@ -158,11 +173,11 @@ namespace GridSystem
                     for(int y = 0; y < grid.GridArray.GetLength(1); y++)
                     {
                         var recordColor = grid.GridSprites[x, y].color;
-                        if(!gridDefinitions[0].UsedColors.Contains(recordColor))
+                        if(!gridDefinitionsToLoad.UsedColors.Contains(recordColor))
                         {
-                            gridDefinitions[0].AddUsedColor(recordColor);
+                            gridDefinitionsToLoad.AddUsedColor(recordColor);
                         }
-                        gridDefinitions[0].SetGridSpritesColor(x, y, grid.GridSprites[x, y].color);
+                        gridDefinitionsToLoad.SetGridSpritesColor(x, y, grid.GridSprites[x, y].color);
                     }
                 }
             }
@@ -174,7 +189,8 @@ namespace GridSystem
 
         public void DEBUG_ResetGrid()
         {
-            if(grid.Parent != null)
+            if(grid == null) { return; }
+            if(grid.Width != 0)
             {
                 for(int x = 0; x < grid.GridArray.GetLength(0); x++)
                 {
