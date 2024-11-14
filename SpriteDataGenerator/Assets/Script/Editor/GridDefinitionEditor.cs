@@ -26,8 +26,8 @@ public class GridDefinitionEditor : Editor
 
         if (GUILayout.Button("Generate LUA from this template"))
         {
-            //string folderPath = "Assets/LUA/"; // the path of LUA folder
-            string folderPath = @"C:\EAE\2024_Fall\GameEngineeringII\GraphicProject\MyGame_\Content\Meshes"; //direct path
+            string folderPath = "Assets/LUA/"; // the path of LUA folder
+            //string folderPath = @"C:\EAE\2024_Fall\GameEngineeringII\GraphicProject\MyGame_\Content\Meshes"; //direct path
 
             if (!System.IO.Directory.Exists(folderPath)) // if this path does not exist yet
                 System.IO.Directory.CreateDirectory(folderPath);  // it will get created
@@ -39,6 +39,7 @@ public class GridDefinitionEditor : Editor
                 var gridDatas = serializedObject.FindProperty("gridColorDatas");
                 List<Vector3> vertexs = new List<Vector3>();
                 List<int> indeces = new List<int>();
+                List<Color> colors = new List<Color>();
                 int currentIndex = 0;
                 for (int i = 0; i < gridDatas.arraySize; i++)
                 {
@@ -75,6 +76,10 @@ public class GridDefinitionEditor : Editor
                         indeces.Add(currentIndex);
                         indeces.Add(currentIndex + 3);
                         indeces.Add(currentIndex + 1);
+                        colors.Add(color);
+                        colors.Add(color);
+                        colors.Add(color);
+                        colors.Add(color);
 
                         currentIndex += 4;
                     }
@@ -105,6 +110,10 @@ public class GridDefinitionEditor : Editor
                 {
                     streamWriter.WriteLine("    color = ");
                     streamWriter.WriteLine("    {");
+                    foreach(var color in colors)
+                    {
+                        streamWriter.WriteLine("        {" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + " },");
+                    }
                     streamWriter.WriteLine("    },");
                 }
                 streamWriter.WriteLine("}");
