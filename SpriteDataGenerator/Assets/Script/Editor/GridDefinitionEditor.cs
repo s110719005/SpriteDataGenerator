@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEditor;
 using GridSystem;
 using System.IO;
-using System.Collections.Specialized;
-using System.Threading;
 
 [CustomEditor(typeof(GridDefinition))]
 public class GridDefinitionEditor : Editor
