@@ -25,7 +25,7 @@ public class GridGeneratorEditor : Editor
         {
             gridGenerator.DEBUG_GenerateGridTemplate();
         }           
-        if (GUILayout.Button("Record grid color into SO"))
+        if (GUILayout.Button("Save grid to loaded SO"))
         {
             gridGenerator.DEBUG_UpdateGridDefinition();
 
@@ -35,7 +35,7 @@ public class GridGeneratorEditor : Editor
             gridGenerator.DEBUG_ResetGrid();
         }
         GUILayout.Space(10);     
-        if (GUILayout.Button("Create new grid Asses"))
+        if (GUILayout.Button("Create new grid Asset"))
         {
             gridGenerator.DEBUG_CreateGridAsset();
         }      
